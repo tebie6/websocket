@@ -1,6 +1,8 @@
 # websocket test
 基于swoole websocket 的聊天服务 【仅限学习使用】
 
+引用 composer require tebie6/websocket
+
     具备以下特点
         1. 自定义二进制协议
         2. 支持单聊和群聊 
