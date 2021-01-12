@@ -1,5 +1,5 @@
 # websocket test
-基于swoole websocket 的聊天服务 
+基于swoole websocket 的聊天服务 【仅限学习使用】
 
     具备以下特点
         1. 自定义二进制协议

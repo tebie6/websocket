@@ -1,0 +1,20 @@
+{
+    "name": "tebie6/websocket",
+    "description": "基于swoole websocket 的聊天服务",
+    "authors": [
+        {
+            "name": "tebie6",
+            "email": "liumingyuphp@163.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "tebie6\\": "src/"
+        }
+    },
+    "license": "MIT"
+}

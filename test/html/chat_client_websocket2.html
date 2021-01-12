@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
+    <script src="jquery.json.js"></script>
+    <script src="message.js"></script>
+    <script type="text/javascript">
+
+        var url = 'ws://ws.tebie6.com:9998';
+        var wsChat = new Message(url);
+
+        // 创建连接
+        wsChat.connect({
+            act: 'CONNECT',
+            username: 'xyq|##|pc_agent|##|1001',
+            password: '123456',
+            role: 2
+        });
+
+        // 接收消息
+        wsChat.on("message", function (e) {
+            console.log(e);
+
+            // 接收推送
+            if (e.act == "PUB"){
+                loadData(e.body); //导入消息记录，加载新的消息
+            }
+        });
+
+        function loadData(data) {
+            var html = '<p>' + data.content + '</p>';
+            $("#history").append(html);
+        }
+
+        function sendMsg() {
+
+            // 发送消息
+            var stamp = parseInt(new Date().getTime() / 1000);
+            var data = { //发送的消息体
+                act: 'PUBLISH',
+                to: 1002,
+                msgId: '12345678901234567890123456789013',
+                body: {
+                    "content_type": 'text',  //消息体类型
+                    "content": $("#content").val(),
+                    "spid": '', //服务ID
+                    "sptype": '', //服务类型
+                    "action": 'talk', //动作标识 talk 发言
+                    "code": 10001, //消息码
+                    "source": 'h5_user', //来源标识
+                    "bsid": 'demo', //业务标识
+                    "role": 3, //角色(1系统 2医生 3注册用户 4客服 5游客)
+                    "time": stamp,
+                    "from": 1001,
+                    "to": 1002
+                }
+            };
+            wsChat.send(data);
+        }
+    </script>
+</head>
+<body>
+<div id="history" style="border: 1px solid #ccc; width: 500px; height: auto">
+
+</div>
+<input type="text" id="content">
+<button onclick="sendMsg()">发送</button>
+</body>
+</html>
