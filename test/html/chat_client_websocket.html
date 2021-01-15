@@ -14,7 +14,7 @@
         // 创建连接
         wsChat.connect({
             act: 'CONNECT',
-            username: 'xyq|##|pc_agent|##|1002',
+            username: 'demo|##|h5|##|1002',
             password: '123456',
             role: 2
         });
@@ -26,6 +26,12 @@
             // 接收推送
             if (e.act == "PUB"){
                 loadData(e.body); //导入消息记录，加载新的消息
+            }
+            // 心跳确认
+            else if (e.act == "PING"){
+                wsChat.send({
+                    act: 'PONG'
+                })
             }
         });
 

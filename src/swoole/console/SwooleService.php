@@ -32,24 +32,16 @@ class SwooleService
     public $gcSessionInterval = 60000;
 
     public $swooleConfig = [
-        // 心跳检测 每隔多少秒，遍历一遍所有的连接
-//        'heartbeat_check_interval' => 2,
-        // 心跳检测 最大闲置时间，超时触发close并关闭  默认为heartbeat_check_interval的2倍，两倍是容错机制，多一点是网络延迟的弥补
-//        'heartbeat_idle_time' => 5,
-        'reactor_num' => 2,
-        'worker_num' => 4,
-        'task_worker_num' => 4,
+        'reactor_num' => 1,
+        'worker_num' => 1,
+        'task_worker_num' => 1,
         'daemonize' => false,
         'log_file' => __DIR__ . '/../logs/swoole.log',
         'log_level' => 0,
         'pid_file' => __DIR__ . '/../logs/server.pid',
     ];
 
-    public $project = [
-        'server'=>[
-            'tebie6\swoole\project\ChatWebsocketServer',
-        ],
-    ];
+    public $project = [];
 
     public function start()
     {

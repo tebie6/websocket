@@ -13,3 +13,35 @@
     交互特定
         1. 异步全双工 
         2. 低延迟软实时
+
+
+### 目录结构
+      
+     ├── README.md
+     ├── composer.json
+     ├── composer.lock
+     ├── doc                                      ## 文档
+     │   └── socket.txt
+     ├── src                                      ## 核心代码
+     │   └── swoole
+     │       ├── console
+     │       │   └── SwooleService.php            ## 脚本继承类
+     │       ├── logs                             ## 日志目录
+     │       │   └── swoole.log
+     │       ├── model                            ## model类
+     │       │   ├── Chat.php
+     │       │   ├── ConnectMysqli.php
+     │       │   ├── OCurl.php
+     │       │   └── OUtils.php
+     │       ├── project                          ## 项目业务文件
+     │       │   ├── ChatWebsocketServer.php
+     │       │   └── chat.sql
+     │       └── server                           ## 项目继承类
+     │           └── WebsocketServer.php
+     └── test                                     ## 测试样例
+         ├── html                                 ## 样例前段代码
+         │   ├── chat_client_websocket.html       
+         │   ├── chat_client_websocket2.html
+         │   ├── jquery.json.js
+         │   └── message.js
+         └── websocket.php                        ## 入口文件

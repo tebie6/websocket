@@ -15,14 +15,14 @@ class ConnectMysqli
     private $link;
 
     //私有的构造方法
-    private function __construct()
+    private function __construct($config)
     {
-        $this->host = '192.168.1.82';
-        $this->port = '3306';
-        $this->user = 'root';
-        $this->pass = '123456';
-        $this->db = 'demo';
-        $this->charset = 'utf8';
+        $this->host = isset($config['host']) ? $config['host'] : 'localhost';
+        $this->port = isset($config['port']) ? $config['port'] : '3306';
+        $this->user = isset($config['user']) ? $config['user'] : 'root';
+        $this->pass = isset($config['pass']) ? $config['pass'] : 'root';
+        $this->db = isset($config['db']) ? $config['db'] : 'small2';
+        $this->charset = isset($arr['charset']) ? $arr['charset'] : 'utf8';
         //连接数据库
         $this->db_connect();
         //选择数据库
@@ -62,10 +62,10 @@ class ConnectMysqli
     }
 
     //公用的静态方法
-    public static function getIntance()
+    public static function getIntance($config)
     {
         if (self::$dbcon == false) {
-            self::$dbcon = new self;
+            self::$dbcon = new self($config);
         }
         return self::$dbcon;
     }

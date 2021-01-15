@@ -6,11 +6,15 @@
  * Time: 3:44 PM
  */
 
-require_once "../vendor/autoload.php";
+require_once __DIR__ ."/../vendor/autoload.php";
 
 class Websockett extends \tebie6\swoole\console\SwooleService
 {
-
+    public $project = [
+        'server'=>[
+            'tebie6\swoole\project\ChatWebsocketServer',
+        ],
+    ];
 }
 
 $ws = new Websockett();

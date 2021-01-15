@@ -9,7 +9,7 @@ abstract class WebsocketServer
 {
     public $swoole;
     public $webRoot;
-    public $config = ['gcSessionInterval' => 60000];
+    public $config = [];
     public $runApp;
 
     public function __construct($host, $port, $mode, $socketType, $swooleConfig=[], $config=[])
@@ -43,14 +43,10 @@ abstract class WebsocketServer
     }
 
     /**
-     * 一分钟清理一次session
+     * Worker子进程启动时的回调函数，每个子进程启动时都会执行。
      */
     public function onWorkerStart( $serv , $worker_id) {
-        if( $worker_id == 0 ) {
-            swoole_timer_tick($this->config['gcSessionInterval'], function(){
-//                (new Session())->gcSession();
-            });
-        }
+
     }
     /**
      * ws事件 继承根据业务重写
