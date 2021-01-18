@@ -55,7 +55,6 @@ function Message(url) {
                 str += String.fromCharCode(_arr[i]);
             }
         }
-        console.log(_arr.length)
         return str;
     };
 

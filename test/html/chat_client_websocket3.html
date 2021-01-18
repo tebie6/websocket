@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+
+    <style>
+
+        .frame {
+            float: left;
+            margin: 20px;
+        }
+        .history {
+            display: block;
+            width: 400px;
+            height: 200px;
+            border: 1px solid #CCC;
+            overflow:scroll;
+        }
+        .content {
+            font-size: 14px;
+            padding-left: 30px;
+        }
+        .uinfo {
+            font-size: 12px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+
+<!--<div class="frame">-->
+    <!--<div class="history">-->
+        <!--<p class="uinfo">UID：1001&nbsp;&nbsp;&nbsp;&nbsp;2020-01-01 00:00:00</p>-->
+        <!--<p class="content">这是内容</p>-->
+    <!--</div>-->
+    <!--UID：1002-->
+    <!--发送到 <select name="" id="">-->
+    <!--<option value="">1001</option>-->
+    <!--<option value="">1002</option>-->
+    <!--<option value="">1003</option>-->
+<!--</select>-->
+    <!--<input class="send_content" type="text">-->
+    <!--<button class="send">发送</button>-->
+    <!--<button class="group_send">群发送</button>-->
+<!--</div>-->
+
+
+<!--<div id="history" style="border: 1px solid #ccc; width: 500px; height: auto"></div>-->
+<!--<input type="text" id="content">-->
+<!--<button onclick="sendMsg()">发送</button>-->
+</body>
+</html>
+
+
+
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
+<script src="jquery.json.js"></script>
+<script src="message.js"></script>
+<script type="text/javascript">
+
+    var conn = function (uid) {
+
+        var url = 'ws://ws.tebie6.com:9998';
+        var wsChat = new Message(url);
+
+        // 创建连接
+        wsChat.connect({
+            act: 'CONNECT',
+            username: 'demo|##|h5|##|'+uid,
+            password: '123456',
+            role: 2
+        });
+
+        // 接收消息
+        wsChat.on("message", function (e) {
+//            console.log(e);
+
+            // 接收推送
+            if (e.act == "PUB") {
+                loadData(e.body); //导入消息记录，加载新的消息
+            }
+            // 心跳确认
+            else if (e.act == "PING") {
+                wsChat.send({
+                    act: 'PONG'
+                })
+            }
+        });
+
+        $(document).on("click", ".send_"+uid, function () {
+
+            var to = parseInt($(this).siblings("select").val());
+            var content = $(".send_content_"+uid).val();
+            // 发送消息
+            var stamp = parseInt(new Date().getTime() / 1000);
+            var data = { //发送的消息体
+                act: 'PUBLISH',
+                to: to,
+                msgId: uuid2(),
+                body: {
+                    "content_type": 'text',  //消息体类型
+                    "content": '123',
+                    "spid": '', //服务ID
+                    "sptype": '', //服务类型
+                    "action": 'talk', //动作标识 talk 发言
+                    "code": 10001, //消息码
+                    "source": 'h5_user', //来源标识
+                    "bsid": 'demo', //业务标识
+                    "role": 3, //角色(1系统 2医生 3注册用户 4客服 5游客)
+                    "time": stamp,
+                    "from": uid,
+                    "to": to
+                }
+            };
+            wsChat.send(data);
+        });
+
+        function loadData(data) {
+            var html = "<p class=\"uinfo\">UID："+ data.from +"&nbsp;&nbsp;&nbsp;&nbsp;" +format(data.time)+ "</p>"+
+            "<p class=\"content\">"  +data.content+ "</p>";
+            $(".history_"+data.to).append(html).scrollTop($(".history_"+data.to)[0].scrollHeight);
+        }
+
+
+        function add0(m){return m<10?'0'+m:m }
+
+        function format(timestamp)
+        {
+            //如果是uinx时间戳记得乘于1000
+            var time = new Date(timestamp*1000);
+            var y = time.getFullYear();
+            var m = time.getMonth()+1;
+            var d = time.getDate();
+            var h = time.getHours();
+            var mm = time.getMinutes();
+            var s = time.getSeconds();
+            return y+'-'+add0(m)+'-'+add0(d)+' '+add0(h)+':'+add0(mm)+':'+add0(s);
+        }
+
+        function uuid2() {
+            var s = [];
+            var hexDigits = "0123456789abcdef";
+            for (var i = 0; i < 32; i++) {
+                s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+            }
+            s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
+            s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
+            s[8] = s[13] = s[18] = s[23];
+            var uuid = s.join("");
+            return uuid;
+        }
+
+    };
+
+    var createHtml = function () {
+        var select = "<select>";
+        for (var i = 1002; i <= 1005; i++) {
+            select += "<option value='"+i+"'>" + i + "</option>";
+        }
+        select += "</select>";
+
+        for (var i = 1002; i <= 1005; i++) {
+            conn(i);
+
+            var html = "<div class=\"frame frame_"+i+"\">"+
+                    "<div class=\"history history_"+ i +"\"></div>"+
+                    "UID："+i+
+                    "发送到 "+ select +
+                    "<input class=\"send_content_"+i+"\" type=\"text\"> <button class=\"send_"+i+"\">发送</button> <button class=\"group_send_"+i+"\">群发送</button>"+
+                    "</div>";
+
+            $("body").append(html);
+        }
+    };
+
+    createHtml();
+
+</script>
